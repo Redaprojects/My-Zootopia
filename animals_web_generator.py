@@ -26,16 +26,19 @@ def get_each_animal_info(animals_data):
         location = animal.get("locations", [])[0]
         animal_type = characteristics.get("type")
         #print(animal_type)
+        output += '<li class="cards__item">'
         if "name" in animal:
-            output += f"Name: {name}\n"
+            output += f"Name: {name}<br/>\n"
         if "locations" in animal:
-            output += f"Location: {location}\n"
+            output += f"Location: {location}<br/>\n"
         if "characteristics" in animal:
             if "diet" in characteristics:
-                output += f"Diet: {diet}\n"
+                output += f"Diet: {diet}<br/>\n"
             if "type" in characteristics:
-                output += f"Type: {animal_type}\n"
+                output += f"Type: {animal_type}<br/>\n"
         ...
+        output += '</li>'
+
     return output
 
 
