@@ -9,7 +9,10 @@ animals_data = load_data('animals_data.json')
 
 print(animals_data)
 
-def each_animal_info():
+def get_each_animal_info():
+    """
+      Gets each animal information from json file based on name, location, diet and type, and prints it.
+    """
     for animal in animals_data:
 
         name = animal.get("name")
@@ -27,4 +30,4 @@ def each_animal_info():
                 print(f"Diet: {diet}")
             if "type" in characteristics:
                 print(f"Type: {animal_type}")
-each_animal_info()
+get_each_animal_info()
