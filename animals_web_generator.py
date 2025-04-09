@@ -1,5 +1,6 @@
 import json
 
+
 def load_data(file_path):
   """ Loads a JSON file """
   with open(file_path, "r") as handle:
@@ -13,7 +14,9 @@ def get_each_animal_info():
     """
       Gets each animal information from json file based on name, location, diet and type, and prints it.
     """
+    output = ""
     for animal in animals_data:
+
 
         name = animal.get("name")
         characteristics = animal.get("characteristics", {})
@@ -22,12 +25,28 @@ def get_each_animal_info():
         animal_type = characteristics.get("type")
         #print(animal_type)
         if "name" in animal:
-            print(f"Name: {name}")
+            output += f"Name: {name}\n"
         if "locations" in animal:
-            print(f"Location: {location}")
+            output += f"Location: {location}\n"
         if "characteristics" in animal:
             if "diet" in characteristics:
-                print(f"Diet: {diet}")
+                output += f"Diet: {diet}\n"
             if "type" in characteristics:
-                print(f"Type: {animal_type}")
-get_each_animal_info()
+                output += f"Type: {animal_type}\n"
+    return output
+output_info = get_each_animal_info()
+
+def implement_json_into_html_file():
+    with open('animals_template.html', 'r') as html_file:
+        animals_template = html_file.read()
+
+
+    updated_html = animals_template.replace("__REPLACE_ANIMALS_INFO__", output_info)
+    print(updated_html)
+
+def main():
+    implement_json_into_html_file()
+
+
+if __name__ == "__main__":
+    main()
