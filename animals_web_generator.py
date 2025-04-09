@@ -26,14 +26,17 @@ def add_animals_info_and_implement_cards_into_html(animals_data):
         animal_type = characteristics.get("type")
         cards_output += '<li class="cards__item">'
         if "name" in animal:
-            cards_output += f"Name: {name}<br>\n"
-        if "locations" in animal:
-            cards_output += f"Location: {location}<br>\n"
+            cards_output += f"<div class=\"card__title\">{name}</div>"
+            cards_output += "<p class =\"card__text\">"
         if "characteristics" in animal:
             if "diet" in characteristics:
-                cards_output += f"Diet: {diet}<br>\n"
+                cards_output += f"<strong>Diet:</strong> {diet}<br>\n"
+        if "locations" in animal:
+            cards_output += f"<strong>Location:</strong> {location}<br>\n"
+        if "characteristics" in animal:
             if "type" in characteristics:
-                cards_output += f"Type: {animal_type}<br>\n"
+                cards_output += f"<strong>Type:</strong> {animal_type}<br>\n"
+            cards_output += '</p>'
         cards_output += '</li>'
 
     return cards_output
