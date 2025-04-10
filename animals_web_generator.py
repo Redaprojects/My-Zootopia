@@ -12,34 +12,48 @@ def initialize_animals_data():
     animals_data = load_data('animals_data.json')
     return animals_data
 
-def add_animals_info_and_implement_cards_into_html(animals_data):
+
+
+
+def serialize_animal_info(animals_data):
     """
       Gets each animal information from json file based on name, location, diet and type, and returns it
       and make crds for each animal.
     """
+    selected_skin_type = get_filter(animals_data)
     cards_output = ''
-    for animal in animals_data:
-        name = animal.get("name")
-        characteristics = animal.get("characteristics", {})
-        diet = characteristics.get("diet")
-        location = animal.get("locations", [])[0]
-        animal_type = characteristics.get("type")
-        cards_output += '<li class="cards__item">'
-        if "name" in animal:
-            cards_output += f"<div class=\"card__title\">{name}</div>"
-            cards_output += "<p class =\"card__text\">"
-        if "characteristics" in animal:
-            if "diet" in characteristics:
-                cards_output += f"<strong>Diet:</strong> {diet}<br>\n"
-        if "locations" in animal:
-            cards_output += f"<strong>Location:</strong> {location}<br>\n"
-        if "characteristics" in animal:
-            if "type" in characteristics:
-                cards_output += f"<strong>Type:</strong> {animal_type}<br>\n"
-            cards_output += '</p>'
-        cards_output += '</li>'
+    name = animals_data.get("name")
+    characteristics = animals_data.get("characteristics", {})
+    diet = characteristics.get("diet")
+    location = animals_data.get("locations", [])[0]
+    animal_type = characteristics.get("type")
+    skin_type = characteristics.get("skin_type")
+    cards_output += '<li class="cards__item">'
+    if "name" in animals_data:
+        cards_output += f"<div class=\"card__title\">{name}</div>"
+        cards_output += "<div class =\"card__text\">"
+        cards_output += "<ul>"
+    if "characteristics" in animals_data:
+        if "diet" in characteristics:
+            cards_output += f"<li><strong>Diet:</strong> {diet}</li>\n"
+    if "locations" in animals_data:
+        cards_output += f"<li><strong>Location:</strong> {location}</li>\n"
+    if "characteristics" in animals_data:
+        if "type" in characteristics:
+            cards_output += f"<li><strong>Type:</strong> {animal_type}</li>\n"
+        if "skin_type" in characteristics:
+            cards_output += f"<li><strong>Type:</strong> {skin_type}</li>\n"
+    cards_output += '</ul></div></li>'
 
     return cards_output
+
+
+def serialize_all_animals_info(animals_data):
+
+    output = []
+    for animal_obj in animals_data:
+        output.append(serialize_animal_info(animal_obj))
+    return "".join(output)
 
 
 def implement_json_into_html_file(cards_output):
@@ -55,10 +69,17 @@ def implement_json_into_html_file(cards_output):
         new_html_file.write(updated_html)
 
 
+def get_filter(animals_data):
+    """"""
+    skin_types = set([animal.get("characteristics", {}).get("skin_type") for animal in animals_data])
+    print("open available skin types: ", ", ".join(skin_types))
+    selected_skin_type = input("Enter the skin type from the list above: ")
+    return selected_skin_type
+
 def main():
     """calls all functions inside the file and runs the generator-program"""
     animals_data = initialize_animals_data()
-    cards_output = add_animals_info_and_implement_cards_into_html(animals_data)
+    cards_output = serialize_all_animals_info(animals_data)
     implement_json_into_html_file(cards_output)
 
 
