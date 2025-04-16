@@ -74,6 +74,7 @@ def implement_json_into_html_file(cards_output):
     updated_html = animals_template.replace("__REPLACE_ANIMALS_INFO__", cards_output)
     with open('animals.html', 'w') as new_html_file:
         new_html_file.write(updated_html)
+    print("The website animals.html successfully generated")
 
 
 def get_filter(animals_data):
