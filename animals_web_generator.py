@@ -29,7 +29,7 @@ def initialize_animals_data(name):
 
 def serialize_animal_info(animals_data, selected_skin_type):
     """
-      Gets each animal information from json file based on name, location, diet, skin_type and type, then returns all infos as output
+      Gets each animal information from api based on name, location, diet, skin_type and type, then returns all infos as output
       besides it creates a card for each animal.
     """
     cards_output = ''
@@ -66,11 +66,16 @@ def serialize_all_animals_info(animals_data):
     creates an empty list and iterates through over each animal then adds all infos about every one
     then returns strings inside the list.
     """
-    selected_skin_type = get_filter(animals_data)
+    selected_skin_type = get_skin_type_filter(animals_data)
     output = []
     for animal_obj in animals_data:
         output.append(serialize_animal_info(animal_obj, selected_skin_type))
     return "".join(output)
+
+
+def render_no_animal_found(name):
+    """returns the head incase there is no animal name found"""
+    return f"<h2>The animal '{name}' doesn't exist.</h2>"
 
 
 def implement_api_data_into_html_file(cards_output):
@@ -86,7 +91,7 @@ def implement_api_data_into_html_file(cards_output):
         new_html_file.write(updated_html)
 
 
-def get_filter(animals_data):
+def get_skin_type_filter(animals_data):
     """
     Creates a set of lowercase skin types from animals_data and asks the user to select one.
     Returns the selected skin type in lowercase.
@@ -108,9 +113,17 @@ def get_filter(animals_data):
 
 
 def main():
-    """gets animal name from the user,calls all functions inside the file and runs the generator-program"""
+    """
+    gets animal name from the user, calls all functions inside the program only if the animal name
+    has been found in api information and runs the generator-program otherwise it stops the program.
+    """
     name = input('Enter the animal name for ex.(cheetah): ').strip()
     animals_data = initialize_animals_data(name)
+    if not animals_data:
+        cards_output = render_no_animal_found(name)
+        implement_api_data_into_html_file(cards_output)
+        return
+
     cards_output = serialize_all_animals_info(animals_data)
     implement_api_data_into_html_file(cards_output)
 
