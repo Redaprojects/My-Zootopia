@@ -1,17 +1,27 @@
-import json
+import requests
+
+API_KEY = '4lOngyMyMhwz0YikgxBSbA==n59PkszwLT8snuu1'
+HEADER = {
+    'X-Api-Key': API_KEY
+}
+API_STATUS = 200
+
+def get_api_data(animal_name):
+    URL = f'https://api.api-ninjas.com/v1/animals?name={animal_name}'
+    try:
+        res = requests.get(URL, headers=HEADER)
+        res.raise_for_status()
+        return res.json()
+    except requests.RequestException as e:
+        print(f"API request failed: {e}")
+        return []
 
 
-def load_data(file_path):
-    """ Loads a JSON file """
-    with open(file_path, "r") as handle:
-        return json.load(handle)
-
-
-def initialize_animals_data():
+def initialize_animals_data(name):
     """
-    defines animals data from the json file and returns it as a list.
+    defines animals data from the api and returns it as a list.
     """
-    animals_data = load_data('animals_data.json')
+    animals_data = get_api_data(name)
     if isinstance(animals_data, dict):
         animals_data = [animals_data]
     return animals_data
@@ -63,7 +73,7 @@ def serialize_all_animals_info(animals_data):
     return "".join(output)
 
 
-def implement_json_into_html_file(cards_output):
+def implement_api_data_into_html_file(cards_output):
     """
     reads the HTML template file by using reading flies method then replaces the string with
     each animals info and creates a new HTML file with modified information.
@@ -74,7 +84,6 @@ def implement_json_into_html_file(cards_output):
     updated_html = animals_template.replace("__REPLACE_ANIMALS_INFO__", cards_output)
     with open('animals.html', 'w') as new_html_file:
         new_html_file.write(updated_html)
-    print("The website animals.html successfully generated")
 
 
 def get_filter(animals_data):
@@ -98,12 +107,12 @@ def get_filter(animals_data):
             print("Invalid skin type. Please choose one from the list.")
 
 
-
 def main():
-    """calls all functions inside the file and runs the generator-program"""
-    animals_data = initialize_animals_data()
+    """gets animal name from the user,calls all functions inside the file and runs the generator-program"""
+    name = input('Enter the animal name for ex.(cheetah): ').strip()
+    animals_data = initialize_animals_data(name)
     cards_output = serialize_all_animals_info(animals_data)
-    implement_json_into_html_file(cards_output)
+    implement_api_data_into_html_file(cards_output)
 
 
 if __name__ == "__main__":
