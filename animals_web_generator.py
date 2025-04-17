@@ -1,6 +1,5 @@
 import data_fetcher
 
-
 def initialize_animals_data(name):
     """
     defines animals data from the api and returns it as a list.
