@@ -1,27 +1,11 @@
-import requests
-
-API_KEY = '4lOngyMyMhwz0YikgxBSbA==n59PkszwLT8snuu1'
-HEADER = {
-    'X-Api-Key': API_KEY
-}
-API_STATUS = 200
-
-def get_api_data(animal_name):
-    URL = f'https://api.api-ninjas.com/v1/animals?name={animal_name}'
-    try:
-        res = requests.get(URL, headers=HEADER)
-        res.raise_for_status()
-        return res.json()
-    except requests.RequestException as e:
-        print(f"API request failed: {e}")
-        return []
+import data_fetcher
 
 
 def initialize_animals_data(name):
     """
     defines animals data from the api and returns it as a list.
     """
-    animals_data = get_api_data(name)
+    animals_data = data_fetcher.fetch_data(name)
     if isinstance(animals_data, dict):
         animals_data = [animals_data]
     return animals_data
@@ -38,7 +22,8 @@ def serialize_animal_info(animals_data, selected_skin_type):
     diet = characteristics.get("diet")
     location = animals_data.get("locations", [])[0]
     animal_type = characteristics.get("type")
-    skin_type = characteristics.get("skin_type").lower()
+    #skin_type = characteristics.get("skin_type", {}).strip().lower()
+    skin_type = characteristics.get("skin_type", "").strip().lower()
     cards_output += '<li class="cards__item">'
     if "name" in animals_data:
         cards_output += f"<div class=\"card__title\">{name}</div>"
@@ -53,7 +38,7 @@ def serialize_animal_info(animals_data, selected_skin_type):
         if "type" in characteristics:
             cards_output += f"<li><strong>Type:</strong> {animal_type}</li>\n"
         if "skin_type" in characteristics:
-            if skin_type != selected_skin_type:
+            if not skin_type or skin_type != selected_skin_type:
                 return ""
             cards_output += f"<li><strong>Skin Type:</strong> {skin_type}</li>\n"
     cards_output += '</ul></div></li>'
